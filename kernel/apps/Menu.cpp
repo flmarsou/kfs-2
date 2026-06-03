@@ -3,6 +3,7 @@
 # include "tty/input/Input.hpp"
 # include "tty/draw/shapes.hpp"
 # include "drivers/vga/vga.hpp"
+# include "apps/applications/Terminal.hpp"
 
 // ========================================================================== //
 //    Constructors & Destructor                                               //
@@ -13,6 +14,8 @@ Menu::Menu(TTY &tty)
 	, currentColumn_(0)
 	, currentRow_{0, 0}
 {
+	tty_.DisableCursor();
+
 	drawTitle();
 	drawMenu();
 	drawBanner();
@@ -97,6 +100,21 @@ void	Menu::Run()
 					columns_[currentColumn_][currentRow_[currentColumn_]].SetSelected(true);
 
 					drawButtons();
+					break ;
+				}
+
+				case (InputKey::Enter):
+				{
+					if (currentColumn_ == 0 && currentRow_[0] == 0)
+					{
+						Terminal terminal(tty_);
+					}
+
+					drawTitle();
+					drawMenu();
+					drawBanner();
+					drawButtons();
+
 					break ;
 				}
 
