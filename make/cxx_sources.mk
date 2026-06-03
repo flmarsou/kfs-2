@@ -23,6 +23,7 @@ CXX_TTY		:=	\
 
 CXX_APPS	:=	\
 				kernel/apps/Menu.cpp \
+				kernel/apps/applications/Terminal.cpp \
 
 # ============================================================================ #
 #    Sources                                                                   #
