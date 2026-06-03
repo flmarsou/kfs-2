@@ -120,7 +120,8 @@ namespace
 
 namespace	gdt
 {
-	static Entry	entry[4];
+	__attribute__((section(".gdt")))
+	static Entry	entry[7];
 	static Pointer	ptr;
 
 	void	init()
@@ -146,6 +147,24 @@ namespace	gdt
 			flags::PAGE | flags::SIZE_32
 		);
 
+		// User Code
+		create_descriptor(entry[4], 0, 0xFFFFF,
+			access::PRESENT | dpl::RING3 | access::CODEDATA | type::CODE_ER,
+			flags::PAGE | flags::SIZE_32
+		);
+
+		// User Data
+		create_descriptor(entry[5], 0, 0xFFFFF,
+			access::PRESENT | dpl::RING3 | access::CODEDATA | type::DATA_RW,
+			flags::PAGE | flags::SIZE_32
+		);
+
+		// User Stack
+		create_descriptor(entry[6], 0, 0xFFFFF,
+			access::PRESENT | dpl::RING3 | access::CODEDATA | type::DATA_RW,
+			flags::PAGE | flags::SIZE_32
+		);
+
 		ptr.size = sizeof(entry) - 1;
 		ptr.data = reinterpret_cast<u32>(&entry);
 
@@ -156,7 +175,7 @@ namespace	gdt
 	{
 		tty.PutStr("GDT Dump:\n\n");
 
-		for (i32 i = 1; i <= 3; ++i)
+		for (i32 i = 1; i <= 6; ++i)
 		{
 			const Entry	&E = entry[i];
 
